@@ -4,8 +4,7 @@ on:
   push:
     branches: [r3f-free-validation]
     paths:
-      - 'r3f-free/**'
-      - '.github/workflows/r3f-free-validation.yml'
+      - 'r3f-free/LAUNCH_R3F_FREE.txt'
   workflow_dispatch:
 
 permissions:
