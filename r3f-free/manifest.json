@@ -1,0 +1,20 @@
+{
+  "blind_seed": 88421,
+  "cases": 18,
+  "conditions": [
+    "NONE",
+    "SELECTIVE",
+    "ORACLE_FORMS"
+  ],
+  "expected_outputs": 54,
+  "format": "R3F-FREE-NEUTRALIZED/1",
+  "generation_parameters": {
+    "do_sample": false,
+    "max_output_tokens": 900,
+    "temperature": 0.0
+  },
+  "neutralized_requests_sha256": "42cc5082864fb38913e104c52e2d1ee510d4b7c175f9cf32b483b369c7a8c0bf",
+  "randomization_seed": 53031,
+  "source_dataset_sha256": "cec4f574db164cd73c7f344f16b8b92ae13945f7452bb3729ad345e577fbc579",
+  "treatment_publication_scope": "compiled neutralized instructions only; no runtime source, registry, bindings, manifests, or proprietary package files"
+}
