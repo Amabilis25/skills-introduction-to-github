@@ -1,6 +1,11 @@
 name: R3F FREE Same-Model Behavioral Campaign
 
 on:
+  push:
+    branches: [r3f-free-validation]
+    paths:
+      - 'r3f-free/**'
+      - '.github/workflows/r3f-free-validation.yml'
   workflow_dispatch:
 
 permissions:
