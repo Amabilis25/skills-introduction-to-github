@@ -6,3 +6,4 @@ blind_seed=88421
 model=Qwen/Qwen2.5-0.5B-Instruct
 compute=github_public_standard_runner_cpu
 monetary_compute_cost=0
+launch_attempt=2_exact_dataset_gate
