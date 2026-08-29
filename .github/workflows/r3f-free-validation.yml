@@ -1,0 +1,66 @@
+name: R3F FREE Same-Model Behavioral Campaign
+
+on:
+  push:
+    branches: [r3f-free-validation]
+    paths:
+      - 'r3f-free/**'
+      - '.github/workflows/r3f-free-validation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 330
+    env:
+      HF_HUB_DISABLE_TELEMETRY: '1'
+      TOKENIZERS_PARALLELISM: 'false'
+      R3F_MODEL_ID: Qwen/Qwen2.5-0.5B-Instruct
+    steps:
+      - name: Checkout frozen branch state
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: 'r3f-free/requirements.txt'
+
+      - name: Install CPU inference stack
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install --index-url https://download.pytorch.org/whl/cpu torch==2.5.1
+          python -m pip install -r r3f-free/requirements.txt
+
+      - name: Run 18 x 3 same-model generation campaign
+        run: python r3f-free/run_campaign.py
+
+      - name: Upload blind scoring bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: r3f-free-blind-bundle
+          path: r3f-free/out/blind_bundle.jsonl
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Upload sealed mapping separately
+        uses: actions/upload-artifact@v4
+        with:
+          name: r3f-free-mapping
+          path: r3f-free/out/blind_mapping.json
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Upload run evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: r3f-free-runs
+          path: |
+            r3f-free/out/runs.jsonl
+            r3f-free/out/generation_receipt.json
+          if-no-files-found: error
+          retention-days: 7
