@@ -29,6 +29,40 @@ jobs:
           cache: 'pip'
           cache-dependency-path: 'r3f-free/requirements.txt'
 
+      - name: Reconstruct and verify neutralized dataset
+        shell: bash
+        run: |
+          python - <<'PY'
+          import base64, gzip, hashlib
+          from pathlib import Path
+          root = Path('r3f-free')
+          names = [
+              'neutralized_requests.part00.b64',
+              'neutralized_requests.part0100.b64',
+              'neutralized_requests.part0101.b64',
+              'neutralized_requests.part0102.b64',
+              'neutralized_requests.part0103.b64',
+              'neutralized_requests.part01040.b64',
+              'neutralized_requests.part01041.b64',
+              'neutralized_requests.part01042.b64',
+              'neutralized_requests.part01043.b64',
+              'neutralized_requests.part01044.b64',
+              'neutralized_requests.part011.b64',
+              'neutralized_requests.part02.b64',
+              'neutralized_requests.part03.b64',
+              'neutralized_requests.part04.b64',
+              'neutralized_requests.part05.b64',
+          ]
+          payload = ''.join((root / n).read_text(encoding='ascii').strip() for n in names)
+          raw = gzip.decompress(base64.b64decode(payload, validate=True))
+          digest = hashlib.sha256(raw).hexdigest()
+          expected = 'cec4f574db164cd73c7f344f16b8b92ae13945f7452bb3729ad345e577fbc579'
+          if digest != expected:
+              raise SystemExit(f'DATASET_DIGEST_MISMATCH:{digest}')
+          (root / 'neutralized_requests.jsonl').write_bytes(raw)
+          print(f'DATASET_OK sha256={digest} bytes={len(raw)}')
+          PY
+
       - name: Install CPU inference stack
         run: |
           python -m pip install --upgrade pip
