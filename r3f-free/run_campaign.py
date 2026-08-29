@@ -8,7 +8,8 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 
 ROOT = Path(__file__).resolve().parent
 DATA = ROOT / 'neutralized_requests.jsonl'
-DATA_B64 = ROOT / 'neutralized_requests.jsonl.gz.b64'
+PART_GLOB = 'neutralized_requests.part*.b64'
+EXPECTED_DATA_SHA256 = 'cec4f574db164cd73c7f344f16b8b92ae13945f7452bb3729ad345e577fbc579'
 OUT = ROOT / 'out'
 MODEL_ID = os.environ.get('R3F_MODEL_ID', 'Qwen/Qwen2.5-0.5B-Instruct')
 RANDOMIZATION_SEED = 53031
@@ -25,8 +26,17 @@ def sha_obj(x) -> str:
 
 def data_bytes() -> bytes:
     if DATA.exists():
-        return DATA.read_bytes()
-    return gzip.decompress(base64.b64decode(DATA_B64.read_text(encoding='ascii')))
+        raw = DATA.read_bytes()
+    else:
+        parts = sorted(ROOT.glob(PART_GLOB))
+        if not parts:
+            raise FileNotFoundError('R3F_FREE_DATA_PARTS_MISSING')
+        payload = ''.join(part.read_text(encoding='ascii').strip() for part in parts)
+        raw = gzip.decompress(base64.b64decode(payload, validate=True))
+    digest = hashlib.sha256(raw).hexdigest()
+    if digest != EXPECTED_DATA_SHA256:
+        raise SystemExit(f'DATASET_DIGEST_MISMATCH:{digest}')
+    return raw
 
 def read_cases():
     return [json.loads(x) for x in data_bytes().decode('utf-8').splitlines() if x.strip()]
