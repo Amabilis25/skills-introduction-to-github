@@ -1,0 +1,9 @@
+R3F-FREE-NEUTRALIZED/1
+campaign=18x3_same_model
+conditions=NONE,SELECTIVE,ORACLE_FORMS
+randomization_seed=53031
+blind_seed=88421
+model=Qwen/Qwen2.5-0.5B-Instruct
+compute=github_public_standard_runner_cpu
+monetary_compute_cost=0
+launch_attempt=006_correct_public_digest

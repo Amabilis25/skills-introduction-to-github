@@ -1,6 +1,6 @@
 name: R3F FREE Same-Model Behavioral Campaign
 
-# atomic-launch-version: 005
+# atomic-launch-version: 006
 on:
   push:
     branches: [r3f-free-validation]
@@ -57,7 +57,7 @@ jobs:
           payload = ''.join((root / n).read_text(encoding='ascii').strip() for n in names)
           raw = gzip.decompress(base64.b64decode(payload, validate=True))
           digest = hashlib.sha256(raw).hexdigest()
-          expected = 'cec4f574db164cd73c7f344f16b8b92ae13945f7452bb3729ad345e577fbc579'
+          expected = '42cc5082864fb38913e104c52e2d1ee510d4b7c175f9cf32b483b369c7a8c0bf'
           if digest != expected:
               raise SystemExit(f'DATASET_DIGEST_MISMATCH:{digest}')
           (root / 'neutralized_requests.jsonl').write_bytes(raw)
