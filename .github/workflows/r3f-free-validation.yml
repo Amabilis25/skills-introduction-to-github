@@ -1,6 +1,6 @@
 name: R3F FREE Same-Model Behavioral Campaign
 
-# atomic-launch-version: 004
+# atomic-launch-version: 005
 on:
   push:
     branches: [r3f-free-validation]
