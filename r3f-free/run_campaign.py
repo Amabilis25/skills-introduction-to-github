@@ -9,7 +9,7 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 ROOT = Path(__file__).resolve().parent
 DATA = ROOT / 'neutralized_requests.jsonl'
 PART_GLOB = 'neutralized_requests.part*.b64'
-EXPECTED_DATA_SHA256 = 'cec4f574db164cd73c7f344f16b8b92ae13945f7452bb3729ad345e577fbc579'
+EXPECTED_DATA_SHA256 = '42cc5082864fb38913e104c52e2d1ee510d4b7c175f9cf32b483b369c7a8c0bf'
 OUT = ROOT / 'out'
 MODEL_ID = os.environ.get('R3F_MODEL_ID', 'Qwen/Qwen2.5-0.5B-Instruct')
 RANDOMIZATION_SEED = 53031
